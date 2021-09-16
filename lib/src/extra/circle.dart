@@ -17,10 +17,10 @@ class Circle extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         width: radius * 2,
         height: radius * 2,
-        child: child,
         decoration: BoxDecoration(
           color: color,
           shape: BoxShape.circle,
         ),
+        child: child,
       );
 }

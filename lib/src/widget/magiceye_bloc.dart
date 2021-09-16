@@ -98,11 +98,11 @@ class MagicEyeBloc {
       (error) => Future.value(Left(error)),
       (controller) => pathFunction().then<Either<MagicEyeException, String>>(
         (directory) async {
-          final path =
-              '${directory.path}/${DateTime.now().microsecondsSinceEpoch}.jpg';
+          String path;
 
           try {
-            await controller.takePicture(path);
+            final file = await controller.takePicture();
+            path = file.path;
           } on CameraException catch (error) {
             return Left(
               MagicEyeException(

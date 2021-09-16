@@ -44,16 +44,16 @@ class LoucoButton extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            RaisedButton(
-              child: Text("Take Picture"),
+            ElevatedButton(
               onPressed: () => MagicEye().push(context).then(
                     (path) => path?.fold(
-                      (e) => print("Error :: ${e.message}"),
+                      (e) => print('Error :: ${e.message}'),
                       (path) => file.add(
                         File(path),
                       ),
                     ),
                   ),
+              child: Text('Take Picture'),
             ),
             SizedBox(height: 16),
             StreamBuilder<File>(
