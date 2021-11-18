@@ -79,15 +79,20 @@ class MagicEyeBloc {
   Future<Either<MagicEyeException, String>> takePicture(
       {final bool temporary = false}) async {
     // Checks if there is a camera controller or return an error.
-    final _controller =
-        controller.value.fold<Either<MagicEyeException, CameraController>>(
-      () => Left(
-        MagicEyeException(
-          message: 'Camera controller not found!',
-        ),
-      ),
-      (controller) => Right(controller),
-    );
+    // ignore: omit_local_variable_types
+    final Either<MagicEyeException, CameraController> _controller = !controller
+            .hasValue
+        ? Left(MagicEyeException(
+            message: 'Camera controller not found!',
+          ))
+        : controller.value!.fold<Either<MagicEyeException, CameraController>>(
+            () => Left(
+              MagicEyeException(
+                message: 'Camera controller not found!',
+              ),
+            ),
+            (controller) => Right(controller),
+          );
 
     // Select the path based on [temporary] parameter.
     final pathFunction =
@@ -139,13 +144,15 @@ class MagicEyeBloc {
   /// [Some<UnallowedDirectionError>].
   ///
   /// If the switchs succeeds, returns [None].
-  Option<UnallowedCameraError> switchCamera() => controller.value.fold(
-        () => const None(),
-        (controller) => selectCamera(
-            controller.description.lensDirection == CameraLensDirection.back
-                ? DeviceCamera.front
-                : DeviceCamera.back),
-      );
+  Option<UnallowedCameraError> switchCamera() => !controller.hasValue
+      ? None()
+      : controller.value!.fold(
+          () => const None(),
+          (controller) => selectCamera(
+              controller.description.lensDirection == CameraLensDirection.back
+                  ? DeviceCamera.front
+                  : DeviceCamera.back),
+        );
 
   void _setCamera(final CameraDescription camera) {
     // Create new controller for [camera]
@@ -156,12 +163,18 @@ class MagicEyeBloc {
 
   /// Releases the resources of the BLoC.
   void dispose() {
-    controller.value.forEach((controller) => controller.dispose());
+    if (controller.hasValue) {
+      controller.value!.forEach((controller) => controller.dispose());
+    }
     controller.close();
   }
 
-  void refreshCamera() => controller.value.fold(
+  void refreshCamera() {
+    if (controller.hasValue) {
+      controller.value!.fold(
         () {},
         (controller) => _setCamera(controller.description),
       );
+    }
+  }
 }

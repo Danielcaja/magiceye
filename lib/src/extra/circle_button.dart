@@ -26,7 +26,8 @@ class CircleButton extends StatelessWidget {
     return Circle(
       radius: 25,
       child: StreamBuilder<DeviceDirection>(
-        initialData: orientationStream?.valueOrNull ?? DeviceDirection.portrait,
+        initialData:
+            orientationStream?.valueWrapper?.value ?? DeviceDirection.portrait,
         stream: orientationStream ?? Stream.value(DeviceDirection.portrait),
         builder: (context, snapshot) {
           final newOrientation = snapshot.data.degrees.toInt();

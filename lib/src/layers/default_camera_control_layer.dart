@@ -124,7 +124,7 @@ class _BottomPictureButtons extends StatelessWidget {
               orientationStream: layerContext!.direction,
             ),
             StreamBuilder<DeviceDirection>(
-              initialData: layerContext!.direction.valueOrNull,
+              initialData: layerContext!.direction.valueWrapper?.value,
               stream: layerContext!.direction,
               builder: (context, snapshot) {
                 final enabled =
