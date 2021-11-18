@@ -103,7 +103,7 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
 
   /// Creates a MagicEye component.
   MagicEye({
-    Key key,
+    Key? key,
     this.loadingWidget = const CircularProgressIndicator(),
     this.previewLayer = defaultCameraPreviewLayer,
     this.resolutionPreset = ResolutionPreset.max,
@@ -124,28 +124,22 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
           defaultDirection: defaultDirection,
           allowedCameras: allowedCameras,
         ),
-        controlLayer = defaultCameraControlLayer(),
-        assert(loadingWidget != null),
-        assert(previewLayer != null),
-        assert(resolutionPreset != null),
-        assert(defaultDirection != null),
-        assert(allowedCameras != null),
-        assert(allowedDirections != null) {
-    WidgetsBinding.instance.addObserver(this);
+        controlLayer = defaultCameraControlLayer() {
+    WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   Widget build(BuildContext context) => StreamBuilder<Option<CameraController>>(
-        stream: _bloc.controller,
-        initialData: _bloc.controller.value,
-        builder: (context, snapshot) => snapshot.data.fold<Widget>(
-          () => Center(child: loadingWidget),
-          (controller) => Stack(
-            alignment: previewAlignment,
-            children: [
-              AspectRatio(
-                aspectRatio: controller.value.aspectRatio,
-                child: Stack(
+      stream: _bloc.controller,
+      initialData: _bloc.controller.value,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data!.fold<Widget>(
+            () => Center(child: loadingWidget),
+            (controller) => Stack(
+              alignment: previewAlignment,
+              children: [
+                Stack(
                   children: <Widget>[
                     CameraPreview(controller),
                     previewLayer(
@@ -157,26 +151,28 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
                     ),
                   ],
                 ),
-              ),
-              Positioned(
-                bottom: 0,
-                top: 0,
-                left: 0,
-                right: 0,
-                child: controlLayer(
-                  context,
-                  ControlLayerContext(
-                    allowedCameras: allowedCameras,
-                    allowedDirections: allowedDirections,
-                    bloc: _bloc,
-                    direction: _orientation,
+                Positioned(
+                  bottom: 0,
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: controlLayer(
+                    context,
+                    ControlLayerContext(
+                      allowedCameras: allowedCameras,
+                      allowedDirections: allowedDirections,
+                      bloc: _bloc,
+                      direction: _orientation,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      );
+              ],
+            ),
+          );
+        } else {
+          return const SizedBox();
+        }
+      });
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -188,7 +184,7 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
   void dispose() {
     _bloc.dispose();
     _orientation.close();
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
   }
 
   /// Pushes the MagicEye to the screen.
@@ -198,11 +194,11 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
   ///
   /// It will return [Either] a [Left<MagicEyeException>], which can be handled or thrown by the client,
   /// or a [Right<String>] containing the path to the screenshot taken.
-  Future<Either<MagicEyeException, String>> push(BuildContext context) =>
+  Future<Either<MagicEyeException, String>?> push(BuildContext context) =>
       Navigator.of(context)
-          .push<Either<MagicEyeException, String>>(
+          .push<Either<MagicEyeException, String>?>(
             MaterialPageRoute(builder: build),
           )
-          .then<Either<MagicEyeException, String>>(id)
+          .then<Either<MagicEyeException, String>?>((id) async => id)
           .whenComplete(dispose);
 }

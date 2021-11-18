@@ -14,7 +14,7 @@ class MagicEyeBloc {
   final controller =
       BehaviorSubject<Option<CameraController>>.seeded(const None());
 
-  Map<DeviceCamera, CameraDescription> _cameras = {
+  Map<DeviceCamera, CameraDescription?> _cameras = {
     DeviceCamera.back: null,
     DeviceCamera.front: null,
   };
@@ -31,10 +31,10 @@ class MagicEyeBloc {
   final Set<DeviceCamera> allowedCameras;
 
   MagicEyeBloc({
-    Key key,
-    @required this.resolutionPreset,
-    @required this.defaultDirection,
-    @required this.allowedCameras,
+    Key? key,
+    required this.resolutionPreset,
+    required this.defaultDirection,
+    required this.allowedCameras,
   }) {
     availableCameras().then(
       (cameras) {
@@ -49,7 +49,7 @@ class MagicEyeBloc {
               .first,
         };
 
-        _setCamera(_cameras[defaultDirection]);
+        _setCamera(_cameras[defaultDirection]!);
 
         // Deal with the disposal of the controller resources everytime the controller changes
         controller.pairwise().listen(
@@ -57,7 +57,7 @@ class MagicEyeBloc {
                 () {},
                 (controller) {
                   // Delay the dispose of the controller until the next frame
-                  SchedulerBinding.instance
+                  SchedulerBinding.instance!
                       .addPostFrameCallback((_) => controller.dispose);
                 },
               ),
@@ -129,7 +129,7 @@ class MagicEyeBloc {
       return Some(UnallowedCameraError(cameraLensDirection));
     }
 
-    _setCamera(_cameras[cameraLensDirection]);
+    _setCamera(_cameras[cameraLensDirection]!);
     return const None();
   }
 

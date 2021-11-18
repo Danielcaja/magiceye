@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../enums/device_camera.dart';
@@ -51,15 +50,11 @@ class ControlLayerContext {
   final Future<Either<MagicEyeException, String>> Function() takePicture;
 
   ControlLayerContext({
-    @required this.allowedCameras,
-    @required this.allowedDirections,
-    @required MagicEyeBloc bloc,
-    @required this.direction,
-  })  : assert(allowedCameras != null),
-        assert(allowedDirections != null),
-        assert(direction != null),
-        assert(bloc != null),
-        selectCamera = bloc.selectCamera,
+    required this.allowedCameras,
+    required this.allowedDirections,
+    required MagicEyeBloc bloc,
+    required this.direction,
+  })  : selectCamera = bloc.selectCamera,
         switchCamera = bloc.switchCamera,
         takePicture = bloc.takePicture;
 }

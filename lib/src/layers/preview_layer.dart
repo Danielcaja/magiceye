@@ -18,7 +18,7 @@ typedef PreviewLayerBuilder = Widget Function(
 /// ```
 abstract class PreviewLayer {
   // This class should not be instantiated.
-  factory PreviewLayer._() => null;
+  PreviewLayer._();
 
   /// Generates a layer that focus on a rectangular area that respects the preview's aspect ratio.
   ///
@@ -116,7 +116,7 @@ class _RectClipper extends CustomClipper<Path> {
   final Rect Function(Size size) rectBuilder;
 
   const _RectClipper({
-    @required this.rectBuilder,
+    required this.rectBuilder,
   });
 
   @override
@@ -140,7 +140,7 @@ class _RoundRectClipper extends CustomClipper<Path> {
   final Rect Function(Size size) rectBuilder;
 
   const _RoundRectClipper({
-    @required this.rectBuilder,
+    required this.rectBuilder,
   });
 
   @override
@@ -163,7 +163,7 @@ class _RoundRectClipper extends CustomClipper<Path> {
 class _GridPainter extends CustomPainter {
   final Color color;
 
-  _GridPainter({this.color});
+  _GridPainter({required this.color});
 
   @override
   void paint(Canvas canvas, Size size) {

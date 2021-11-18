@@ -47,7 +47,7 @@ Widget Function(BuildContext, ControlLayerContext) defaultCameraControlLayer() {
             builder: (context, snapshot) {
               if (snapshot.data is _WithException) {
                 cameraState.add(const _Idle());
-                SchedulerBinding.instance.addPostFrameCallback(
+                SchedulerBinding.instance!.addPostFrameCallback(
                   (_) {
                     Navigator.of(context)
                         .pop<Either<MagicEyeException, String>>(
@@ -103,11 +103,11 @@ Widget Function(BuildContext, ControlLayerContext) defaultCameraControlLayer() {
 }
 
 class _BottomPictureButtons extends StatelessWidget {
-  final BehaviorSubject<_CameraState> cameraState;
-  final ControlLayerContext layerContext;
+  final BehaviorSubject<_CameraState>? cameraState;
+  final ControlLayerContext? layerContext;
 
   const _BottomPictureButtons({
-    Key key,
+    Key? key,
     this.layerContext,
     this.cameraState,
   }) : super(key: key);
@@ -121,14 +121,14 @@ class _BottomPictureButtons extends StatelessWidget {
             CircleButton(
               icon: Icons.arrow_back_ios,
               onPressed: Navigator.of(context).pop,
-              orientationStream: layerContext.direction,
+              orientationStream: layerContext!.direction,
             ),
             StreamBuilder<DeviceDirection>(
-              initialData: layerContext.direction.value,
-              stream: layerContext.direction,
+              initialData: layerContext!.direction.valueOrNull,
+              stream: layerContext!.direction,
               builder: (context, snapshot) {
                 final enabled =
-                    layerContext.allowedDirections.contains(snapshot.data);
+                    layerContext!.allowedDirections.contains(snapshot.data);
 
                 return AnimatedCrossFade(
                   duration: Duration(milliseconds: 500),
@@ -136,16 +136,16 @@ class _BottomPictureButtons extends StatelessWidget {
                   firstChild: CircleButton(
                     icon: Icons.camera_alt,
                     onPressed: () {
-                      cameraState.add(const _TakingPicture());
+                      cameraState!.add(const _TakingPicture());
 
-                      layerContext.takePicture().then(
+                      layerContext!.takePicture().then(
                             (pathOr) => pathOr.fold(
-                              (e) => cameraState.add(_WithException(e)),
-                              (path) => cameraState.add(_WithPicture(path)),
+                              (e) => cameraState!.add(_WithException(e)),
+                              (path) => cameraState!.add(_WithPicture(path)),
                             ),
                           );
                     },
-                    orientationStream: layerContext.direction,
+                    orientationStream: layerContext!.direction,
                   ),
                   secondCurve: Curves.easeOutQuint,
                   secondChild: AbsorbPointer(
@@ -157,11 +157,11 @@ class _BottomPictureButtons extends StatelessWidget {
                 );
               },
             ),
-            layerContext.allowedCameras.length > 1
+            layerContext!.allowedCameras.length > 1
                 ? CircleButton(
                     icon: Icons.cached,
-                    onPressed: layerContext.switchCamera,
-                    orientationStream: layerContext.direction,
+                    onPressed: layerContext!.switchCamera,
+                    orientationStream: layerContext!.direction,
                   )
                 : SizedBox(width: 50, height: 50),
           ],
@@ -174,9 +174,9 @@ class _BottomConfirmationButtons extends StatelessWidget {
   final BehaviorSubject<_CameraState> pathStream;
 
   const _BottomConfirmationButtons({
-    Key key,
-    this.path,
-    this.pathStream,
+    Key? key,
+    required this.path,
+    required this.pathStream,
   }) : super(key: key);
 
   @override

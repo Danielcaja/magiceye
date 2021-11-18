@@ -10,24 +10,19 @@ enum DeviceDirection {
 }
 
 /// Extends the DeviceDirection enum with getters that represent the direction's angle.
-extension DeviceDirectionAngleExtension on DeviceDirection {
-  double _toDegrees(DeviceDirection direction) {
+extension DeviceDirectionAngleExtension on DeviceDirection? {
+  double _toDegrees(DeviceDirection? direction) {
     switch (direction) {
       case DeviceDirection.portrait:
         return 0;
-        break;
       case DeviceDirection.portraitReversed:
         return 180;
-        break;
       case DeviceDirection.landscapeLeft:
         return 90;
-        break;
       case DeviceDirection.landscapeRight:
         return 270;
-        break;
       default:
         return 0;
-        break;
     }
   }
 

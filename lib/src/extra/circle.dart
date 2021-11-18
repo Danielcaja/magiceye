@@ -6,12 +6,11 @@ class Circle extends StatelessWidget {
   final Color color;
 
   const Circle({
-    Key key,
-    @required this.radius,
-    this.child,
+    Key? key,
+    required this.radius,
+    required this.child,
     this.color = Colors.black38,
-  })  : assert(radius != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Container(

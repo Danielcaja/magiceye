@@ -10,15 +10,14 @@ import 'circle.dart';
 class CircleButton extends StatelessWidget {
   final IconData icon;
   final void Function() onPressed;
-  final BehaviorSubject<DeviceDirection> orientationStream;
+  final BehaviorSubject<DeviceDirection>? orientationStream;
 
   const CircleButton({
-    Key key,
-    @required this.icon,
-    this.onPressed,
+    Key? key,
+    required this.icon,
+    required this.onPressed,
     this.orientationStream,
-  })  : assert(icon != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class CircleButton extends StatelessWidget {
     return Circle(
       radius: 25,
       child: StreamBuilder<DeviceDirection>(
-        initialData: orientationStream?.value ?? DeviceDirection.portrait,
+        initialData: orientationStream?.valueOrNull ?? DeviceDirection.portrait,
         stream: orientationStream ?? Stream.value(DeviceDirection.portrait),
         builder: (context, snapshot) {
           final newOrientation = snapshot.data.degrees.toInt();
