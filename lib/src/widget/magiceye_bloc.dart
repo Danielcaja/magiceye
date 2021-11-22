@@ -85,7 +85,7 @@ class MagicEyeBloc {
         ? Left(MagicEyeException(
             message: 'Camera controller not found!',
           ))
-        : controller.value!.fold<Either<MagicEyeException, CameraController>>(
+        : controller.value.fold<Either<MagicEyeException, CameraController>>(
             () => Left(
               MagicEyeException(
                 message: 'Camera controller not found!',
@@ -146,7 +146,7 @@ class MagicEyeBloc {
   /// If the switchs succeeds, returns [None].
   Option<UnallowedCameraError> switchCamera() => !controller.hasValue
       ? None()
-      : controller.value!.fold(
+      : controller.value.fold(
           () => const None(),
           (controller) => selectCamera(
               controller.description.lensDirection == CameraLensDirection.back
@@ -164,14 +164,14 @@ class MagicEyeBloc {
   /// Releases the resources of the BLoC.
   void dispose() {
     if (controller.hasValue) {
-      controller.value!.forEach((controller) => controller.dispose());
+      controller.value.forEach((controller) => controller.dispose());
     }
     controller.close();
   }
 
   void refreshCamera() {
     if (controller.hasValue) {
-      controller.value!.fold(
+      controller.value.fold(
         () {},
         (controller) => _setCamera(controller.description),
       );
