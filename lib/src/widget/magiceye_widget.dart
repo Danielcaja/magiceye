@@ -136,38 +136,45 @@ class MagicEye extends StatelessWidget with WidgetsBindingObserver {
         if (snapshot.hasData) {
           return snapshot.data!.fold<Widget>(
             () => Center(child: loadingWidget),
-            (controller) => Stack(
-              alignment: previewAlignment,
-              children: [
-                Stack(
-                  children: <Widget>[
-                    CameraPreview(controller),
-                    previewLayer(
-                      context,
-                      PreviewLayerContext(
-                        allowedDirections: allowedDirections,
-                        direction: _orientation,
+            (controller) {
+              try {
+                controller.debugCheckIsDisposed();
+                return const SizedBox();
+              } catch (e) {
+                return Stack(
+                  alignment: previewAlignment,
+                  children: [
+                    Stack(
+                      children: <Widget>[
+                        CameraPreview(controller),
+                        previewLayer(
+                          context,
+                          PreviewLayerContext(
+                            allowedDirections: allowedDirections,
+                            direction: _orientation,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: controlLayer(
+                        context,
+                        ControlLayerContext(
+                          allowedCameras: allowedCameras,
+                          allowedDirections: allowedDirections,
+                          bloc: _bloc,
+                          direction: _orientation,
+                        ),
                       ),
                     ),
                   ],
-                ),
-                Positioned(
-                  bottom: 0,
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: controlLayer(
-                    context,
-                    ControlLayerContext(
-                      allowedCameras: allowedCameras,
-                      allowedDirections: allowedDirections,
-                      bloc: _bloc,
-                      direction: _orientation,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                );
+              }
+            },
           );
         } else {
           return const SizedBox();
