@@ -1,3 +1,7 @@
+# 0.1.9
+
+* Added `debugCheckIsDisposed()` in `magiceye_widget.dart`.
+
 # 0.1.7+1
 
 * My linter was broken, so I uploaded last version with a lot of errors. :(
